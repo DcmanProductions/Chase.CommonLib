@@ -11,7 +11,8 @@ using System.IO.Compression;
 namespace Chase.CommonLib.FileSystem.Configuration;
 
 /// <summary>
-/// A database file is a zip archive that contains a collection of entries.
+/// A database file is a compressed file that contains a collection of entries, this is best used
+/// for large amounts of data.
 /// </summary>
 public class DatabaseFile : IDisposable
 {
