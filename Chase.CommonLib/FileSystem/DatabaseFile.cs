@@ -8,7 +8,7 @@
 using Newtonsoft.Json;
 using System.IO.Compression;
 
-namespace Chase.CommonLib.FileSystem.Configuration;
+namespace Chase.CommonLib.FileSystem;
 
 /// <summary>
 /// A database file is a compressed file that contains a collection of entries, this is best used
