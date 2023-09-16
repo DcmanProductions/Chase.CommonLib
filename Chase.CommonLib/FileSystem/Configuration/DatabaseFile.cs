@@ -1,6 +1,6 @@
 ﻿/*
     Chase CommonLib - LFInteractive LLC. 2021-2024
-    CommonLib is a library of common functions and classes for .NET 5.0+.
+    CommonLib is a library of common functions and classes for .NET 6.0+.
     Licensed under GPL-3.0
     https://www.gnu.org/licenses/gpl-3.0.en.html#license-text
 */
