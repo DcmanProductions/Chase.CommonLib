@@ -5,11 +5,11 @@ A library of common functions and classes for .NET 6.0+.
 CommonLib is available on [NuGet](https://www.nuget.org/packages/Chase.CommonLib/).
 
 .NET CLI:
-```bash
+```powershell
 dotnet add package Chase.CommonLib
 ```
 Nuget:
-```bash
+```powershell
 Install-Package Chase.CommonLib
 ```
 
