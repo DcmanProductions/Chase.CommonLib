@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chase.CommonLib", "Chase.CommonLib\Chase.CommonLib.csproj", "{797F35A6-90E7-42FE-A9AC-E1D2A4542404}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chase.CommonLib", "Chase.CommonLib\Chase.CommonLib.csproj", "{797F35A6-90E7-42FE-A9AC-E1D2A4542404}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{443E0F99-98E7-4241-95A4-F84CD1D71B05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{797F35A6-90E7-42FE-A9AC-E1D2A4542404}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{797F35A6-90E7-42FE-A9AC-E1D2A4542404}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{797F35A6-90E7-42FE-A9AC-E1D2A4542404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{443E0F99-98E7-4241-95A4-F84CD1D71B05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{443E0F99-98E7-4241-95A4-F84CD1D71B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{443E0F99-98E7-4241-95A4-F84CD1D71B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{443E0F99-98E7-4241-95A4-F84CD1D71B05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
