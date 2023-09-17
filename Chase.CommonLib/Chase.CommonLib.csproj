@@ -11,11 +11,15 @@
     <Company>LFInteractive LLC.</Company>
     <Description>CommonLib is a library of common functions and classes for .NET 5.0+.</Description>
     <PackageTags>Chase;Utility;Library;Lib;Common</PackageTags>
-    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed accessibility of the AppConfigBase constructor</PackageReleaseNotes>
     <PackageIcon>Icon.jpg</PackageIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/DcmanProductions/Chase.CommonLib</RepositoryUrl>
+    <PackageProjectUrl>https://docs.lfinteractive.net/programming/csharp/common-lib</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
