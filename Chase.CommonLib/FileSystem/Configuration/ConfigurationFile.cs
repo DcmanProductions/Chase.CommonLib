@@ -6,6 +6,7 @@
 */
 
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Chase.CommonLib.FileSystem.Configuration;
 
@@ -39,6 +40,7 @@ public class ConfigurationFile<T> : IDisposable
     /// <param name="keepOpen"></param>
     public ConfigurationFile(string filePath, bool keepOpen = false)
     {
+        Log.Debug("Creating or opening configuration file: {FILE}", filePath);
         KeepOpen = keepOpen;
         FilePath = filePath;
         if (keepOpen)
@@ -53,6 +55,7 @@ public class ConfigurationFile<T> : IDisposable
     /// <returns></returns>
     public bool Save()
     {
+        Log.Debug("Saving configuration file: {FILE}", FilePath);
         if (KeepOpen)
         {
             stream ??= File.Open(FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
@@ -76,6 +79,7 @@ public class ConfigurationFile<T> : IDisposable
     /// <returns>The loaded content.</returns>
     public T? Load()
     {
+        Log.Debug("Loading configuration file: {FILE}", FilePath);
         if (KeepOpen)
         {
             stream ??= File.Open(FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
@@ -94,6 +98,7 @@ public class ConfigurationFile<T> : IDisposable
     /// </summary>
     public void Dispose()
     {
+        Log.Warning("Disposing of the Configuration File: {FILE}", FilePath);
         Save();
         stream?.Dispose();
         GC.SuppressFinalize(this);

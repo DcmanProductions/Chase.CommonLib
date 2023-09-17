@@ -6,6 +6,7 @@
 */
 
 using Newtonsoft.Json;
+using Serilog;
 using System.IO.Compression;
 
 namespace Chase.CommonLib.FileSystem;
@@ -17,6 +18,7 @@ namespace Chase.CommonLib.FileSystem;
 public class DatabaseFile : IDisposable
 {
     private readonly ZipArchive baseStream;
+    private readonly string filePath;
 
     /// <summary>
     /// Creates a new database file.
@@ -24,6 +26,8 @@ public class DatabaseFile : IDisposable
     /// <param name="filePath"></param>
     public DatabaseFile(string filePath)
     {
+        Log.Debug("Creating or opening database file: {FILE}", filePath);
+        this.filePath = filePath;
         baseStream = ZipFile.Open(filePath, ZipArchiveMode.Update);
     }
 
@@ -44,6 +48,7 @@ public class DatabaseFile : IDisposable
     /// <param name="value"></param>
     public void WriteEntry(Guid key, object value)
     {
+        Log.Debug("Writing entry to {KEY}", key.ToString("N"));
         ZipArchiveEntry zipEntry = baseStream.GetEntry(ParseEntryPath(key)) ?? baseStream.CreateEntry(ParseEntryPath(key), CompressionLevel.SmallestSize);
         using Stream stream = zipEntry.Open();
         using StreamWriter writer = new(stream);
@@ -63,6 +68,7 @@ public class DatabaseFile : IDisposable
         ZipArchiveEntry? zipEntry = baseStream.GetEntry(ParseEntryPath(key));
         if (zipEntry != null)
         {
+            Log.Debug("Reading entry {KEY}", key.ToString("N"));
             using Stream stream = zipEntry.Open();
             using StreamReader reader = new(stream);
             return JsonConvert.DeserializeObject<T>(reader.ReadToEnd());
@@ -86,6 +92,7 @@ public class DatabaseFile : IDisposable
     /// </summary>
     public void Dispose()
     {
+        Log.Warning("Disposing of the Database File: {FILE}", filePath);
         baseStream.Dispose();
         GC.SuppressFinalize(this);
     }
