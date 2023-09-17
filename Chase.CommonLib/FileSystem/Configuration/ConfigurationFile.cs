@@ -6,6 +6,7 @@
 */
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Chase.CommonLib.FileSystem.Configuration;
@@ -14,93 +15,85 @@ namespace Chase.CommonLib.FileSystem.Configuration;
 /// A configuration file is a json file that contains a collection of entries.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class ConfigurationFile<T> : IDisposable
+public class ConfigurationFile<T> where T : ConfigurationFile<T>, new()
 {
     /// <summary>
-    /// The Configuration Files Content
+    /// Event handler for when the configuration file is updated.
     /// </summary>
-    public T? Content { get; set; }
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public delegate void ConfigurationEventHandler(object sender, EventArgs e);
 
     /// <summary>
-    /// If the Configuration File should be kept open or not
+    /// Event that is fired when the configuration file is saved.
     /// </summary>
-    public bool KeepOpen { get; private set; }
+    public event ConfigurationEventHandler? ConfigurationSaved;
 
     /// <summary>
-    /// The Configuration Files Path
+    /// Event that is fired when the configuration file is loaded.
     /// </summary>
-    public string FilePath { get; private set; }
-
-    private FileStream? stream { get; set; }
+    public event ConfigurationEventHandler? ConfigurationLoaded;
 
     /// <summary>
-    /// Creates or opens a configuration file.
+    /// The configuration file path.
     /// </summary>
-    /// <param name="filePath"></param>
-    /// <param name="keepOpen"></param>
-    public ConfigurationFile(string filePath, bool keepOpen = false)
+    [JsonIgnore]
+    public string Path { get; set; } = "";
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    protected ConfigurationFile()
     {
-        Log.Debug("Creating or opening configuration file: {FILE}", filePath);
-        KeepOpen = keepOpen;
-        FilePath = filePath;
-        if (keepOpen)
-        {
-            stream = File.Open(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-        }
     }
 
     /// <summary>
-    /// Saves the contents of <see cref="Content">Content</see> to the configuration file.
+    /// Saves the configuration file from.
     /// </summary>
-    /// <returns></returns>
-    public bool Save()
+    /// <exception cref="IOException">If the configuration file path is not set.</exception>
+    public virtual void Save()
     {
-        Log.Debug("Saving configuration file: {FILE}", FilePath);
-        if (KeepOpen)
+        if (string.IsNullOrEmpty(Path))
         {
-            stream ??= File.Open(FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-            using StreamWriter writer = new(stream);
-            writer.Write(JsonConvert.SerializeObject(Content));
+            throw new IOException("Configuration file path is not set.");
+        }
+        Log.Debug("Saving config file: {CONFIG}", Path);
+        using (StreamWriter writer = File.CreateText(Path))
+        {
+            writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
             writer.Flush();
-            stream.Flush();
-            return true;
         }
-        else
-        {
-            File.WriteAllText(FilePath, JsonConvert.SerializeObject(Content));
-            return true;
-        }
+
+        ConfigurationSaved?.Invoke(this, EventArgs.Empty);
     }
 
     /// <summary>
-    /// Loads the contents of the configuration file into <see cref="Content">Content</see>. <br/>
-    /// If the file fails to load the original content will be returned.
+    /// Loads the configuration file from disk.
     /// </summary>
-    /// <returns>The loaded content.</returns>
-    public T? Load()
+    /// <exception cref="IOException">If the configuration file path is not set.</exception>
+    public virtual T? Load()
     {
-        Log.Debug("Loading configuration file: {FILE}", FilePath);
-        if (KeepOpen)
+        if (string.IsNullOrEmpty(Path))
         {
-            stream ??= File.Open(FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-            using StreamReader reader = new(stream);
-            Content = JsonConvert.DeserializeObject<T>(reader.ReadToEnd()) ?? Content;
+            throw new IOException("Configuration file path is not set.");
+        }
+
+        if (!File.Exists(Path))
+        {
+            Save();
         }
         else
         {
-            Content = JsonConvert.DeserializeObject<T>(File.ReadAllText(FilePath)) ?? Content;
-        }
-        return Content;
-    }
+            Log.Debug("Loading config file: {CONFIG}", Path);
 
-    /// <summary>
-    /// Releases all resources used by the <see cref="ConfigurationFile{T}"/> object.
-    /// </summary>
-    public void Dispose()
-    {
-        Log.Warning("Disposing of the Configuration File: {FILE}", FilePath);
-        Save();
-        stream?.Dispose();
-        GC.SuppressFinalize(this);
+            ConfigurationLoaded?.Invoke(this, EventArgs.Empty);
+            T? item = JObject.Parse(File.ReadAllText(Path))?.ToObject<T>();
+            if (item != null)
+            {
+                item.Path = Path;
+            }
+            return item;
+        }
+        return null;
     }
 }
