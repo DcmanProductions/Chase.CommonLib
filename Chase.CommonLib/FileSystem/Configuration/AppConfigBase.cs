@@ -14,7 +14,7 @@ namespace Chase.CommonLib.FileSystem.Configuration;
 /// <summary>
 /// Base class for configuration files.
 /// </summary>
-public class AppConfigBase
+public class AppConfigBase<T> where T : AppConfigBase<T>, new()
 {
     /// <summary>
     /// Event handler for when the configuration file is updated.
@@ -33,20 +33,25 @@ public class AppConfigBase
     /// </summary>
     public event ConfigurationEventHandler? ConfigurationLoaded;
 
+    private static Lazy<T> _instance = new(() => new T());
+
     /// <summary>
     /// The singleton instance of the configuration file.
     /// </summary>
     [JsonIgnore]
-    public static AppConfigBase Instance { get; protected set; } = new AppConfigBase();
+    public static T Instance => _instance.Value;
 
     /// <summary>
     /// The configuration file path.
     /// </summary>
+    [JsonIgnore]
     public string Path { get; set; } = "";
 
-    private AppConfigBase()
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    protected AppConfigBase()
     {
-        Instance = new();
     }
 
     /// <summary>
@@ -55,6 +60,7 @@ public class AppConfigBase
     /// <param name="path"></param>
     public virtual void Initialize(string path)
     {
+        Log.Debug("Initializing config file: {CONFIG}", path);
         Instance.Path = path;
         Instance.Load();
     }
@@ -97,8 +103,22 @@ public class AppConfigBase
         else
         {
             Log.Debug("Loading config file: {CONFIG}", Path);
-            Instance = JObject.Parse(File.ReadAllText(Path))?.ToObject<AppConfigBase>() ?? Instance;
+
+            T loadedInstance = JObject.Parse(File.ReadAllText(Path))?.ToObject<T>() ?? Instance;
+            CopyProperties(loadedInstance);
+
             ConfigurationLoaded?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    private void CopyProperties(T source)
+    {
+        foreach (var property in typeof(T).GetProperties())
+        {
+            if (property.CanWrite)
+            {
+                property.SetValue(this, property.GetValue(source));
+            }
         }
     }
 }
