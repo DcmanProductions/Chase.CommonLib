@@ -86,6 +86,19 @@ public class AdvancedNetworkClient : HttpClient
     /// <returns></returns>
     public async Task<HttpResponseMessage> UploadFileAsync(string address, string file, DownloadProgressEvent? progress = null)
     {
+        using HttpRequestMessage request = new(HttpMethod.Post, address);
+        return await UploadFileAsync(request, file, progress);
+    }
+
+    /// <summary>
+    /// Uploads a file using the specified request and input file
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="file"></param>
+    /// <param name="progress"></param>
+    /// <returns></returns>
+    public async Task<HttpResponseMessage> UploadFileAsync(HttpRequestMessage request, string file, DownloadProgressEvent? progress = null)
+    {
         using FileStream fs = File.OpenRead(file); // Opens the file for reading
         using StreamContent content = new(fs); // Creates a new StreamContent object with the file stream
 
@@ -109,10 +122,7 @@ public class AdvancedNetworkClient : HttpClient
         content.Headers.ContentLength = totalBytes;
 
         // Creates a new request message with the content
-        using HttpRequestMessage request = new(HttpMethod.Post, address)
-        {
-            Content = content
-        };
+        request.Content = content;
 
         // Sends the request and gets the response
         using HttpResponseMessage response = await SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
