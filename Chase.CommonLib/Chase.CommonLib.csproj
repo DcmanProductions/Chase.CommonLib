@@ -9,12 +9,12 @@
     <Title>CommonLib</Title>
     <Authors>Drew Chase</Authors>
     <Company>LFInteractive LLC.</Company>
-    <Description>CommonLib is a library of common functions and classes for .NET 5.0+.</Description>
+    <Description>CommonLib is a library of common functions and classes for .NET 6.0+.</Description>
     <PackageTags>Chase;Utility;Library;Lib;Common</PackageTags>
-    <PackageReleaseNotes>Fixed accessibility of the AppConfigBase constructor</PackageReleaseNotes>
+    <PackageReleaseNotes>Added ability to manually flush database file contents to disk.</PackageReleaseNotes>
     <PackageIcon>Icon.jpg</PackageIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>0.0.2</Version>
+    <Version>0.0.4</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/DcmanProductions/Chase.CommonLib</RepositoryUrl>
     <PackageProjectUrl>https://docs.lfinteractive.net/programming/csharp/common-lib</PackageProjectUrl>

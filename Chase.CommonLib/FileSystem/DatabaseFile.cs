@@ -17,8 +17,8 @@ namespace Chase.CommonLib.FileSystem;
 /// </summary>
 public class DatabaseFile : IDisposable
 {
-    private readonly ZipArchive baseStream;
     private readonly string filePath;
+    private ZipArchive baseStream;
 
     /// <summary>
     /// Creates a new database file.
@@ -55,6 +55,15 @@ public class DatabaseFile : IDisposable
         writer.Write(JsonConvert.SerializeObject(value));
         writer.Flush();
         stream.Flush();
+    }
+
+    /// <summary>
+    /// Flushes the database file to disk.
+    /// </summary>
+    public void Flush()
+    {
+        baseStream.Dispose();
+        baseStream = ZipFile.Open(filePath, ZipArchiveMode.Update);
     }
 
     /// <summary>
