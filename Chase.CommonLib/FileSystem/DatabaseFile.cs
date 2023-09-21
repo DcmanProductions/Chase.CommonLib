@@ -49,7 +49,9 @@ public class DatabaseFile : IDisposable
     public void WriteEntry(Guid key, object value)
     {
         Log.Debug("Writing entry to {KEY}", key.ToString("N"));
-        ZipArchiveEntry zipEntry = baseStream.GetEntry(ParseEntryPath(key)) ?? baseStream.CreateEntry(ParseEntryPath(key), CompressionLevel.SmallestSize);
+        ZipArchiveEntry? zipEntry = baseStream.GetEntry(ParseEntryPath(key));
+        zipEntry?.Delete();
+        zipEntry = baseStream.CreateEntry(ParseEntryPath(key), CompressionLevel.SmallestSize);
         using Stream stream = zipEntry.Open();
         using StreamWriter writer = new(stream);
         writer.Write(JsonConvert.SerializeObject(value));

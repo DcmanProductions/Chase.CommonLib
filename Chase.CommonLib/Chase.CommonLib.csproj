@@ -11,10 +11,10 @@
     <Company>LFInteractive LLC.</Company>
     <Description>CommonLib is a library of common functions and classes for .NET 6.0+.</Description>
     <PackageTags>Chase;Utility;Library;Lib;Common</PackageTags>
-    <PackageReleaseNotes>Added ability to manually flush database file contents to disk.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed issue where the database file is not overwriting the previous output.</PackageReleaseNotes>
     <PackageIcon>Icon.jpg</PackageIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/DcmanProductions/Chase.CommonLib</RepositoryUrl>
     <PackageProjectUrl>https://docs.lfinteractive.net/programming/csharp/common-lib</PackageProjectUrl>
