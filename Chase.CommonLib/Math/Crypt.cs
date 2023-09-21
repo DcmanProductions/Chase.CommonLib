@@ -6,8 +6,8 @@
 */
 
 using DeviceId;
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Chase.CommonLib.Math;
 
