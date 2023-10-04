@@ -48,6 +48,7 @@ public class AdvancedNetworkClient : HttpClient
         long totalBytesRead = 0;
         double bytesPerSecond = 0;
         long currentBytes = 0;
+        bool isDirty = false;
 
         System.Timers.Timer dataPerSecondTimer = new(1000) { Enabled = true, AutoReset = true };
         System.Timers.Timer updateProgressTimer = new(100) { Enabled = true, AutoReset = true };
@@ -59,7 +60,11 @@ public class AdvancedNetworkClient : HttpClient
 
         updateProgressTimer.Elapsed += (s, e) =>
         {
-            progress?.Invoke(this, new DownloadProgressEventArgs(Path.GetFileName(file), (double)totalBytesRead / contentLength, totalBytesRead, contentLength, bytesPerSecond));
+            if (isDirty)
+            {
+                isDirty = false;
+                progress?.Invoke(this, new DownloadProgressEventArgs(Path.GetFileName(file), (double)totalBytesRead / contentLength, totalBytesRead, contentLength, bytesPerSecond));
+            }
         };
         dataPerSecondTimer.Start();
         updateProgressTimer.Start();
@@ -69,6 +74,7 @@ public class AdvancedNetworkClient : HttpClient
             {
                 await fs.WriteAsync(buffer.AsMemory(0, bytesRead));
                 totalBytesRead += bytesRead;
+                isDirty = true;
             }
         }
         dataPerSecondTimer.Stop();
