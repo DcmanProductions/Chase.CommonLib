@@ -60,6 +60,22 @@ public class DatabaseFile : IDisposable
     }
 
     /// <summary>
+    /// Writes a file to the database file.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="file"></param>
+    public void WriteEntry(Guid key, FileStream file)
+    {
+        Log.Debug("Writing entry to {KEY}", key.ToString("N"));
+        ZipArchiveEntry? zipEntry = baseStream.GetEntry(ParseEntryPath(key));
+        zipEntry?.Delete();
+        zipEntry = baseStream.CreateEntry(ParseEntryPath(key), CompressionLevel.SmallestSize);
+        using Stream stream = zipEntry.Open();
+        file.CopyTo(stream);
+        stream.Flush();
+    }
+
+    /// <summary>
     /// Flushes the database file to disk.
     /// </summary>
     public void Flush()
