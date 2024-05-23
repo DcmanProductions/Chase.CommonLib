@@ -11,10 +11,10 @@
     <Company>LFInteractive LLC.</Company>
     <Description>CommonLib is a library of common functions and classes for .NET 6.0+.</Description>
     <PackageTags>Chase;Utility;Library;Lib;Common</PackageTags>
-    <PackageReleaseNotes>Added filesystem database</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed the Encrypt and Decrypt issue with content longer then 64 bytes</PackageReleaseNotes>
     <PackageIcon>Icon.jpg</PackageIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>0.0.8</Version>
+    <Version>0.0.9</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/DcmanProductions/Chase.CommonLib</RepositoryUrl>
     <PackageProjectUrl>https://docs.lfinteractive.net/programming/csharp/common-lib</PackageProjectUrl>
