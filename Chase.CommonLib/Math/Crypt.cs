@@ -51,13 +51,14 @@ public class Crypt
         }
 
         using Aes aes = Aes.Create();
+        aes.Padding = PaddingMode.PKCS7;
         using MemoryStream ms = new();
-        using CryptoStream cs = new(ms, aes.CreateEncryptor(GetSaltBytes(), GetSaltBytes()), CryptoStreamMode.Write);
+        using CryptoStream cs = new(ms, aes.CreateEncryptor(GetSaltBytes(32), GetSaltBytes(16)), CryptoStreamMode.Write);
         using (StreamWriter sw = new(cs))
         {
             sw.Write(text);
         }
-        return Convert.ToBase64String(ms.ToArray())[..^2];
+        return Convert.ToBase64String(ms.ToArray());
     }
 
     /// <summary>
@@ -78,8 +79,9 @@ public class Crypt
         }
 
         using Aes aesAlg = Aes.Create();
-        aesAlg.Key = GetSaltBytes();
-        aesAlg.IV = GetSaltBytes();
+        aesAlg.Key = GetSaltBytes(32);
+        aesAlg.IV = GetSaltBytes(16);
+        aesAlg.Padding = PaddingMode.PKCS7;
 
         using FileStream inputFileStream = new(path, FileMode.Open);
         using FileStream outputFileStream = new(output, FileMode.Create);
@@ -107,8 +109,9 @@ public class Crypt
         }
 
         using Aes aesAlg = Aes.Create();
-        aesAlg.Key = GetSaltBytes();
-        aesAlg.IV = GetSaltBytes();
+        aesAlg.Key = GetSaltBytes(32);
+        aesAlg.IV = GetSaltBytes(16);
+        aesAlg.Padding = PaddingMode.PKCS7;
 
         using FileStream inputFileStream = new(path, FileMode.Open);
         using FileStream outputFileStream = new(output, FileMode.Create);
@@ -131,10 +134,10 @@ public class Crypt
             throw new ArgumentNullException(nameof(text), "This can not be blank.");
         }
 
-        byte[] cipher = Convert.FromBase64String(text + "==");
+        byte[] cipher = Convert.FromBase64String(text);
         using Aes aes = Aes.Create();
         using MemoryStream ms = new(cipher);
-        using CryptoStream cs = new(ms, aes.CreateDecryptor(GetSaltBytes(), GetSaltBytes()), CryptoStreamMode.Read);
+        using CryptoStream cs = new(ms, aes.CreateDecryptor(GetSaltBytes(32), GetSaltBytes(16)), CryptoStreamMode.Read);
         using StreamReader reader = new(cs);
         return reader.ReadToEnd();
     }
@@ -143,10 +146,10 @@ public class Crypt
     /// Gets the salt bytes.
     /// </summary>
     /// <returns></returns>
-    private byte[] GetSaltBytes()
+    private byte[] GetSaltBytes(long size)
     {
         byte[] saltBytes = Encoding.UTF8.GetBytes(Salt);
-        byte[] secret = new byte[16];
+        byte[] secret = new byte[size];
         for (int i = 0; i < secret.Length; i++)
         {
             if (i < saltBytes.Length)
