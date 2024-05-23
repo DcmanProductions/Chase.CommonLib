@@ -13,7 +13,7 @@ namespace Chase.CommonLib.FileSystem;
 
 /// <summary>
 /// A database file is a compressed file that contains a collection of entries, this is best used
-/// for large amounts of data.
+/// for large amounts of data. Can be slower to open and close, but faster to read and write.
 /// </summary>
 public class DatabaseFile : IDisposable
 {
@@ -104,6 +104,22 @@ public class DatabaseFile : IDisposable
     }
 
     /// <summary>
+    /// Reads a file from the database file.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public ZipArchiveEntry? ReadFile(Guid key)
+    {
+        ZipArchiveEntry? zipEntry = baseStream.GetEntry(ParseEntryPath(key));
+        if (zipEntry != null)
+        {
+            Log.Debug("Reading entry {KEY}", key.ToString("N"));
+            return zipEntry;
+        }
+        return default;
+    }
+
+    /// <summary>
     /// Checks if an entry exists in the database file.
     /// </summary>
     /// <param name="key"></param>
@@ -122,6 +138,15 @@ public class DatabaseFile : IDisposable
         Log.Warning("Disposing of the Database File: {FILE}", filePath);
         baseStream.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Returns the underlying archive stream
+    /// </summary>
+    /// <returns></returns>
+    public ZipArchive GetStream()
+    {
+        return baseStream;
     }
 
     private static string ParseEntryPath(Guid key) => Path.Combine(key.ToString("N")[..2], key.ToString("N"));
