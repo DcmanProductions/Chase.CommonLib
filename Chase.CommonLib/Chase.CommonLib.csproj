@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <LangVersion>10.0</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -11,10 +11,10 @@
     <Company>LFInteractive LLC.</Company>
     <Description>CommonLib is a library of common functions and classes for .NET 6.0+.</Description>
     <PackageTags>Chase;Utility;Library;Lib;Common</PackageTags>
-    <PackageReleaseNotes>Added ability to save file stream to database file</PackageReleaseNotes>
+    <PackageReleaseNotes>Added filesystem database</PackageReleaseNotes>
     <PackageIcon>Icon.jpg</PackageIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>0.0.7</Version>
+    <Version>0.0.8</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/DcmanProductions/Chase.CommonLib</RepositoryUrl>
     <PackageProjectUrl>https://docs.lfinteractive.net/programming/csharp/common-lib</PackageProjectUrl>
